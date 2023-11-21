@@ -1,6 +1,7 @@
 package com.example.imgrgblsb
 
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -16,6 +17,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.imgrgblsb.ui.theme.ImgRGBlsbTheme
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,8 +62,16 @@ fun Bitmap.test(): Bitmap {
 
     for (y in 0 until height) {
         for (x in 0 until width) {
-            //ピクセル操作（この場合は色反転）
-            pixels[x + y * width] = pixels[x + y * width] xor 0x00ffffff
+            val pixel = pixels[x + y * width]
+
+            //ARGB
+            val pixelAlpha: Int = (pixels[x + y * width] shr 24) and 0xff
+            val pixelRed   : Int = (pixel shr 16) and 0xff
+            val pixelGreen : Int = (pixel shr 8 ) and 0xff
+            val pixelBlue  : Int =  pixel         and 0xff
+
+            //set
+            pixels[x + y * width] =  Color.argb(255, pixelRed / 3, pixelGreen / 3, pixelBlue / 3)
         }
     }
 
@@ -69,12 +79,6 @@ fun Bitmap.test(): Bitmap {
         setPixels(pixels, 0, width, 0, 0, width, height)
     }
 }
-
-//fun Bitmap.abcdef(): {
-
-//}
-
-
 
 @Composable
 fun test(): Bitmap {
